@@ -37,16 +37,17 @@ JS_METHOD(Terminate) {
 JS_METHOD(GetVersion) {
   int major, minor, rev;
   glfwGetVersion(&major,&minor,&rev);
-  Local<Array> arr=Array::New(v8::Isolate::GetCurrent(), 3);
-  arr->Set(JS_STR("major"),JS_INT(major));
-  arr->Set(JS_STR("minor"),JS_INT(minor));
-  arr->Set(JS_STR("rev"),JS_INT(rev));
+  Local<Array> arr = Nan::New<Array>(3);
+  Nan::Set(arr, JS_STR("major").ToLocalChecked(), JS_INT(major));
+  Nan::Set(arr, JS_STR("minor").ToLocalChecked(), JS_INT(minor));
+  Nan::Set(arr, JS_STR("rev").ToLocalChecked(), JS_INT(rev));
+
   SET_RETURN_VALUE(arr);
 }
 
 JS_METHOD(GetVersionString) {
   const char* ver=glfwGetVersionString();
-  SET_RETURN_VALUE(JS_STR(ver));
+  SET_RETURN_VALUE(JS_STR(ver).ToLocalChecked());
 }
 
 /* @Module: Time input */
@@ -77,37 +78,37 @@ JS_METHOD(GetMonitors) {
   Local<Array> js_modes;
   for(i=0; i<monitor_count; i++){
     js_monitor = Object::New(v8::Isolate::GetCurrent());
-    js_monitor->Set(JS_STR("is_primary"), JS_BOOL(monitors[i] == primary));
-    js_monitor->Set(JS_STR("index"), JS_INT(i));
+    Nan::Set(js_monitor, JS_STR("is_primary").ToLocalChecked(), JS_BOOL(monitors[i] == primary));
+    Nan::Set(js_monitor, JS_STR("index").ToLocalChecked(), JS_INT(i));
     
-    js_monitor->Set(JS_STR("name"), JS_STR(glfwGetMonitorName(monitors[i])));
+    Nan::Set(js_monitor, JS_STR("name").ToLocalChecked(), JS_STR(glfwGetMonitorName(monitors[i])).ToLocalChecked());
     
     glfwGetMonitorPos(monitors[i], &xpos, &ypos);
-    js_monitor->Set(JS_STR("pos_x"), JS_INT(xpos));
-    js_monitor->Set(JS_STR("pos_y"), JS_INT(ypos));
-    
+    Nan::Set(js_monitor, JS_STR("pos_x").ToLocalChecked(), JS_INT(xpos));
+    Nan::Set(js_monitor, JS_STR("pos_y").ToLocalChecked(), JS_INT(ypos));
+
     glfwGetMonitorPhysicalSize(monitors[i], &width, &height);
-    js_monitor->Set(JS_STR("width_mm"), JS_INT(width));
-    js_monitor->Set(JS_STR("height_mm"), JS_INT(height));
+    Nan::Set(js_monitor, JS_STR("width_mm").ToLocalChecked(), JS_INT(width));
+    Nan::Set(js_monitor, JS_STR("height_mm").ToLocalChecked(), JS_INT(height));
     
     mode = glfwGetVideoMode(monitors[i]);
-    js_monitor->Set(JS_STR("width"), JS_INT(mode->width));
-    js_monitor->Set(JS_STR("height"), JS_INT(mode->height));
-    js_monitor->Set(JS_STR("rate"), JS_INT(mode->refreshRate));
+    Nan::Set(js_monitor, JS_STR("width").ToLocalChecked(), JS_INT(mode->width));
+    Nan::Set(js_monitor, JS_STR("height").ToLocalChecked(), JS_INT(mode->height));
+    Nan::Set(js_monitor, JS_STR("rate").ToLocalChecked(), JS_INT(mode->refreshRate));
     
     modes = glfwGetVideoModes(monitors[i], &mode_count);
     js_modes = Array::New(v8::Isolate::GetCurrent(), mode_count);
     for(j=0; j<mode_count; j++){
       js_mode = Object::New(v8::Isolate::GetCurrent());
-      js_mode->Set(JS_STR("width"), JS_INT(modes[j].width));
-      js_mode->Set(JS_STR("height"), JS_INT(modes[j].height));
-      js_mode->Set(JS_STR("rate"), JS_INT(modes[j].refreshRate));
+      Nan::Set(js_mode, JS_STR("width").ToLocalChecked(), JS_INT(modes[j].width));
+      Nan::Set(js_mode, JS_STR("height").ToLocalChecked(), JS_INT(modes[j].height));
+      Nan::Set(js_mode, JS_STR("rate").ToLocalChecked(), JS_INT(modes[j].refreshRate));
       // NOTE: Are color bits necessary?
-      js_modes->Set(JS_INT(j), js_mode);
+      Nan::Set(js_modes, JS_INT(j), js_mode);
     }
-    js_monitor->Set(JS_STR("modes"), js_modes);
-    
-    js_monitors->Set(JS_INT(i), js_monitor);
+    Nan::Set(js_monitor, JS_STR("modes").ToLocalChecked(), js_modes);
+
+    Nan::Set(js_monitors, JS_INT(i), js_monitor);
   }
   
   SET_RETURN_VALUE(js_monitors);
@@ -650,7 +651,7 @@ JS_METHOD(CreateGLFWWindow) {
 
   // Set callback functions
   // glfw_events.Reset(info.This()->Get(JS_STR("events"))->ToObject());
-  glfw_events.Reset(Nan::To<v8::Object>(info.This()->Get(JS_STR("events"))).ToLocalChecked());
+  glfw_events.Reset(Nan::To<v8::Object>(Nan::Get(info.This(), JS_STR("events").ToLocalChecked()).ToLocalChecked()).ToLocalChecked());
 
   SET_RETURN_VALUE(JS_NUM((uint64_t) window));
 }
@@ -703,9 +704,9 @@ JS_METHOD(GetWindowSize) {
     int w,h;
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwGetWindowSize(window, &w, &h);
-    Local<Array> arr=Array::New(v8::Isolate::GetCurrent(), 2);
-    arr->Set(JS_STR("width"),JS_INT(w));
-    arr->Set(JS_STR("height"),JS_INT(h));
+    Local<Array> arr = Nan::New<Array>(2);
+    Nan::Set(arr, JS_STR("width").ToLocalChecked(), JS_INT(w));
+    Nan::Set(arr, JS_STR("height").ToLocalChecked(), JS_INT(h));
     SET_RETURN_VALUE(arr);
     return;
   }
@@ -736,9 +737,9 @@ JS_METHOD(GetWindowPos) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     int xpos, ypos;
     glfwGetWindowPos(window, &xpos, &ypos);
-    Local<Array> arr=Array::New(v8::Isolate::GetCurrent(), 2);
-    arr->Set(JS_STR("xpos"),JS_INT(xpos));
-    arr->Set(JS_STR("ypos"),JS_INT(ypos));
+    Local<Array> arr = Nan::New<Array>(2);
+    Nan::Set(arr, JS_STR("xpos").ToLocalChecked(), JS_INT(xpos));
+    Nan::Set(arr, JS_STR("ypos").ToLocalChecked(), JS_INT(ypos));
     SET_RETURN_VALUE(arr);
     return;
   }
@@ -751,9 +752,9 @@ JS_METHOD(GetFramebufferSize) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
-    Local<Array> arr=Array::New(v8::Isolate::GetCurrent(), 2);
-    arr->Set(JS_STR("width"),JS_INT(width));
-    arr->Set(JS_STR("height"),JS_INT(height));
+    Local<Array> arr = Nan::New<Array>(2);
+    Nan::Set(arr, JS_STR("width").ToLocalChecked(), JS_INT(width));
+    Nan::Set(arr, JS_STR("height").ToLocalChecked(), JS_INT(height));
     SET_RETURN_VALUE(arr);
     return;
   }
@@ -871,9 +872,9 @@ JS_METHOD(GetCursorPos) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     double x,y;
     glfwGetCursorPos(window, &x, &y);
-    Local<Array> arr=Array::New(v8::Isolate::GetCurrent(), 2);
-    arr->Set(JS_STR("x"),JS_INT(x));
-    arr->Set(JS_STR("y"),JS_INT(y));
+    Local<Array> arr = Nan::New<Array>(2);
+    Nan::Set(arr, JS_STR("x").ToLocalChecked(), JS_INT(x));
+    Nan::Set(arr, JS_STR("y").ToLocalChecked(), JS_INT(y));
     SET_RETURN_VALUE(arr);
     return;
   }
@@ -973,7 +974,7 @@ void AtExit() {
 // bindings
 //
 ///////////////////////////////////////////////////////////////////////////////
-#define JS_GLFW_CONSTANT(name) target->Set(JS_STR( #name ), JS_INT(GLFW_ ## name))
+#define JS_GLFW_CONSTANT(name) Nan::Set(target, JS_STR( #name ).ToLocalChecked(), JS_INT(GLFW_ ## name))
 #define JS_GLFW_SET_METHOD(name) Nan::SetMethod(target, #name , glfw::name);
 
 extern "C" {

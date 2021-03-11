@@ -20,7 +20,7 @@
 using namespace v8;
 
 namespace {
-#define JS_STR(...) v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), __VA_ARGS__)
+#define JS_STR(...) Nan::New<v8::String>(__VA_ARGS__)
 #define JS_INT(val) v8::Integer::New(v8::Isolate::GetCurrent(), val)
 #define JS_NUM(val) v8::Number::New(v8::Isolate::GetCurrent(), val)
 #define JS_BOOL(val) v8::Boolean::New(v8::Isolate::GetCurrent(), val)
