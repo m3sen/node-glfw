@@ -1,5 +1,5 @@
 {
-    "name": "node-glfw-3",
+    "name": "node-12-glfw-3",
     "version": "0.3.4",
     "description": "A NodeJS wrapper around GLFW",
     "main": "index.js",
@@ -28,22 +28,21 @@
         "3d",
         "graphics"
     ],
-    "maintainers": "Kenny Yuan <kaining.yuan@intel.com>",
     "licenses": [
         {
             "type": "BSD",
             "url": "http://github.com/maghoff/node-glfw/raw/master/LICENSES"
         }
     ],
-    "repository": {
+    "repository": {     
         "type": "git",
-        "url": "http://github.com/kenny-y/node-glfw"
+        "url": "https://github.com/whsol/node-glfw"
     },
     "engines": {
-        "node": "0.6.5-0.11.3"
+        "node": "12-14"
     },
     "scripts": {},
     "dependencies": {
-        "nan": "^2.10.0"
+        "nan": "^2.14.2"
     }
 }

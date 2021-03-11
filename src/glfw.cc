@@ -56,7 +56,7 @@ JS_METHOD(GetTime) {
 }
 
 JS_METHOD(SetTime) {
-  double time = info[0]->NumberValue();
+  double time = Nan::To<double> (info[0]).FromJust();
   glfwSetTime(time);
   SET_RETURN_VALUE(Nan::Undefined());
 }
@@ -222,17 +222,17 @@ static void _DrawImage2D(const Rect& r, const std::string& type,
 }
 
 JS_METHOD(drawImage2D) {
-  const int x = info[0]->Int32Value();        // Viewport x
-  const int y = info[1]->Int32Value();        // Viewport y
-  const int width = info[2]->Uint32Value();   // Viewport width
-  const int height = info[3]->Uint32Value();  // Viewport height
+  const int x = Nan::To<int32_t>(info[0]).FromJust();        // Viewport x
+  const int y =  Nan::To<int32_t>(info[1]).FromJust();        // Viewport y
+  const int width = Nan::To<uint32_t>(info[2]).FromJust();   // Viewport width
+  const int height = Nan::To<uint32_t>(info[3]).FromJust();  // Viewport height
 
   Nan::Utf8String str(info[4]); // Buffer type
   std::string type = *str;
   Nan::TypedArrayContents<uint16_t> buffer(info[5].As<Uint16Array>());
   const void* data = *buffer; // Buffer pointer
-  const int data_width = info[6]->Uint32Value();  // Buffer width
-  const int data_height = info[7]->Uint32Value(); // Buffer height
+  const int data_width = Nan::To<uint32_t>(info[6]).FromJust();  // Buffer width
+  const int data_height = Nan::To<uint32_t>(info[7]).FromJust(); // Buffer height
 
   Rect r;
   r.x = x;
@@ -366,12 +366,12 @@ void register_callbacks(GLFWwindow* window) {
 JS_METHOD(drawDepthAndColorAsPointCloud) {
   size_t argIndex = 0;
   GLFWwindow* win =
-      reinterpret_cast<GLFWwindow*>(info[argIndex++]->IntegerValue());
+      reinterpret_cast<GLFWwindow*>(Nan::To<int64_t>(info[argIndex++]).FromJust());
 
   Nan::TypedArrayContents<float> buffer0(info[argIndex++].As<Float32Array>());
   const float3* vertices = reinterpret_cast<float3*>(*buffer0);
 
-  uint32_t point_count = info[argIndex++]->Uint32Value();
+  uint32_t point_count = Nan::To<int32_t>(info[argIndex++]).FromJust();
 
   Nan::TypedArrayContents<float> buffer1(info[argIndex++].As<Float32Array>());
   const float2* tex_coords = reinterpret_cast<float2*>(*buffer1);
@@ -379,8 +379,8 @@ JS_METHOD(drawDepthAndColorAsPointCloud) {
   Nan::TypedArrayContents<uint8_t> buffer2(info[argIndex++].As<Uint8Array>());
   uint8_t* color = *buffer2;
 
-  uint32_t color_width = info[argIndex++]->Uint32Value();
-  uint32_t color_height = info[argIndex++]->Uint32Value();
+  uint32_t color_width = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t color_height = Nan::To<uint32_t>(info[argIndex++]).FromJust();
   Nan::Utf8String str0(info[argIndex++]);
   std::string color_format_str = *str0;
 
@@ -462,7 +462,7 @@ static void global_key_func(GLFWwindow *, int key,
 }
 
 JS_METHOD(setKeyCallback) {
-  GLFWwindow* win = reinterpret_cast<GLFWwindow*>(info[0]->IntegerValue());
+  GLFWwindow* win = reinterpret_cast<GLFWwindow*>(Nan::To<int32_t>(info[0]).FromJust());
   global_js_key_callback = new Nan::Callback(info[1].As<v8::Function>());
   glfwSetKeyCallback(win, global_key_func);
 }
@@ -470,12 +470,12 @@ JS_METHOD(setKeyCallback) {
 JS_METHOD(draw2x2Streams) {
   size_t argIndex = 0;
   GLFWwindow* win =
-    reinterpret_cast<GLFWwindow*>(info[argIndex++]->IntegerValue());
+    reinterpret_cast<GLFWwindow*>(Nan::To<int32_t>(info[argIndex++]).FromJust());
   int32_t winW = 0;
   int32_t winH = 0;
   glfwGetWindowSize(win, &winW, &winH);
 
-  uint32_t channel_count = info[argIndex++]->Uint32Value();
+  uint32_t channel_count = Nan::To<uint32_t>(info[argIndex++]).FromJust();
   float width_divid_factor = 1.0f;
   float height_divid_factor = 1.0f;
   if (channel_count == 2) {
@@ -490,29 +490,29 @@ JS_METHOD(draw2x2Streams) {
   const void* data0 = *buffer0;
   Nan::Utf8String str0(info[argIndex++]);
   std::string type0 = *str0;
-  uint32_t width0 = info[argIndex++]->Uint32Value();
-  uint32_t height0 = info[argIndex++]->Uint32Value();
+  uint32_t width0 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t height0 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
 
   Nan::TypedArrayContents<uint8_t> buffer1(info[argIndex++].As<Uint8Array>());
   const void* data1 = *buffer1;
   Nan::Utf8String str1(info[argIndex++]);
   std::string type1 = *str1;
-  uint32_t width1 = info[argIndex++]->Uint32Value();
-  uint32_t height1 = info[argIndex++]->Uint32Value();
+  uint32_t width1 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t height1 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
 
   Nan::TypedArrayContents<uint8_t> buffer2(info[argIndex++].As<Uint8Array>());
   const void* data2 = *buffer2;
   Nan::Utf8String str2(info[argIndex++]);
   std::string type2 = *str2;
-  uint32_t width2 = info[argIndex++]->Uint32Value();
-  uint32_t height2 = info[argIndex++]->Uint32Value();
+  uint32_t width2 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t height2 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
 
   Nan::TypedArrayContents<uint8_t> buffer3(info[argIndex++].As<Uint8Array>());
   const void* data3 = *buffer3;
   Nan::Utf8String str3(info[argIndex++]);
   std::string type3 = *str3;
-  uint32_t width3 = info[argIndex++]->Uint32Value();
-  uint32_t height3 = info[argIndex++]->Uint32Value();
+  uint32_t width3 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t height3 = Nan::To<uint32_t>(info[argIndex++]).FromJust();
 
   glPixelZoom(1, -1);
 
@@ -567,8 +567,8 @@ JS_METHOD(draw2x2Streams) {
 }
 
 JS_METHOD(testScene) {
-  int width = info[0]->Uint32Value();
-  int height = info[1]->Uint32Value();
+  int width = Nan::To<uint32_t>(info[0]).FromJust();
+  int height = Nan::To<uint32_t>(info[1]).FromJust();
   float ratio = width / (float) height;
 
   glViewport(0, 0, width, height);
@@ -595,8 +595,8 @@ JS_METHOD(testScene) {
 }
 
 JS_METHOD(WindowHint) {
-  int target       = info[0]->Uint32Value();
-  int hint         = info[1]->Uint32Value();
+  int target       = Nan::To<uint32_t>(info[0]).FromJust();
+  int hint         = Nan::To<uint32_t>(info[1]).FromJust();
   glfwWindowHint(target, hint);
   SET_RETURN_VALUE(Nan::Undefined());
 }
@@ -607,10 +607,10 @@ JS_METHOD(DefaultWindowHints) {
 }
 
 JS_METHOD(CreateGLFWWindow) {
-  int width       = info[0]->Uint32Value();
-  int height      = info[1]->Uint32Value();
+  int width       = Nan::To<uint32_t>(info[0]).FromJust();
+  int height      = Nan::To<uint32_t>(info[1]).FromJust();
   Nan::Utf8String str(info[2]);
-  int monitor_idx = info[3]->Uint32Value();
+  int monitor_idx = Nan::To<uint32_t>(info[3]).FromJust();
   
   GLFWwindow* window = NULL;
   GLFWmonitor **monitors = NULL, *monitor = NULL;
@@ -649,13 +649,14 @@ JS_METHOD(CreateGLFWWindow) {
     glfwSetWindowSize(window, width,height);
 
   // Set callback functions
-  glfw_events.Reset(info.This()->Get(JS_STR("events"))->ToObject());
+  // glfw_events.Reset(info.This()->Get(JS_STR("events"))->ToObject());
+  glfw_events.Reset(Nan::To<v8::Object>(info.This()->Get(JS_STR("events"))).ToLocalChecked());
 
   SET_RETURN_VALUE(JS_NUM((uint64_t) window));
 }
 
 JS_METHOD(DestroyWindow) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwDestroyWindow(window);
@@ -664,12 +665,12 @@ JS_METHOD(DestroyWindow) {
 }
 
 JS_METHOD(Ortho) {
-  int32_t val0=info[0]->IntegerValue();
-  int32_t val1=info[1]->IntegerValue();
-  int32_t val2=info[2]->IntegerValue();
-  int32_t val3=info[3]->IntegerValue();
-  int32_t val4=info[4]->IntegerValue();
-  int32_t val5=info[5]->IntegerValue();
+  int32_t val0=Nan::To<int32_t>(info[0]).FromJust();
+  int32_t val1=Nan::To<int32_t>(info[1]).FromJust();
+  int32_t val2=Nan::To<int32_t>(info[2]).FromJust();
+  int32_t val3=Nan::To<int32_t>(info[3]).FromJust();
+  int32_t val4=Nan::To<int32_t>(info[4]).FromJust();
+  int32_t val5=Nan::To<int32_t>(info[5]).FromJust();
   glOrtho(val0, val1, val2, val3, val4, val5);
 }
 
@@ -687,7 +688,7 @@ JS_METHOD(ClearColorBuffer) {
 
 
 JS_METHOD(SetWindowTitle) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   Nan::Utf8String str(info[1]);
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
@@ -697,7 +698,7 @@ JS_METHOD(SetWindowTitle) {
 }
 
 JS_METHOD(GetWindowSize) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     int w,h;
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
@@ -712,25 +713,25 @@ JS_METHOD(GetWindowSize) {
 }
 
 JS_METHOD(SetWindowSize) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
-    glfwSetWindowSize(window, info[1]->Uint32Value(),info[2]->Uint32Value());
+    glfwSetWindowSize(window, Nan::To<uint32_t>(info[1]).FromJust(), Nan::To<uint32_t>(info[2]).FromJust());
   }
   SET_RETURN_VALUE(Nan::Undefined());
 }
 
 JS_METHOD(SetWindowPos) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
-    glfwSetWindowPos(window, info[1]->Uint32Value(),info[2]->Uint32Value());
+    glfwSetWindowPos(window, Nan::To<uint32_t>(info[1]).FromJust(), Nan::To<uint32_t>(info[2]).FromJust());
   }
   SET_RETURN_VALUE(Nan::Undefined());
 }
 
 JS_METHOD(GetWindowPos) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     int xpos, ypos;
@@ -745,7 +746,7 @@ JS_METHOD(GetWindowPos) {
 }
 
 JS_METHOD(GetFramebufferSize) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     int width, height;
@@ -760,7 +761,7 @@ JS_METHOD(GetFramebufferSize) {
 }
 
 JS_METHOD(IconifyWindow) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwIconifyWindow(window);
@@ -769,7 +770,7 @@ JS_METHOD(IconifyWindow) {
 }
 
 JS_METHOD(RestoreWindow) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwRestoreWindow(window);
@@ -778,7 +779,7 @@ JS_METHOD(RestoreWindow) {
 }
 
 JS_METHOD(HideWindow) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwHideWindow(window);
@@ -787,7 +788,7 @@ JS_METHOD(HideWindow) {
 }
 
 JS_METHOD(ShowWindow) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwShowWindow(window);
@@ -796,7 +797,7 @@ JS_METHOD(ShowWindow) {
 }
 
 JS_METHOD(WindowShouldClose) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     SET_RETURN_VALUE(JS_INT(glfwWindowShouldClose(window)));
@@ -806,8 +807,8 @@ JS_METHOD(WindowShouldClose) {
 }
 
 JS_METHOD(SetWindowShouldClose) {
-  uint64_t handle=info[0]->IntegerValue();
-  int value=info[1]->Uint32Value();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
+  int value=Nan::To<uint32_t>(info[1]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwSetWindowShouldClose(window, value);
@@ -816,8 +817,8 @@ JS_METHOD(SetWindowShouldClose) {
 }
 
 JS_METHOD(GetWindowAttrib) {
-  uint64_t handle=info[0]->IntegerValue();
-  int attrib=info[1]->Uint32Value();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
+  int attrib=Nan::To<uint32_t>(info[1]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     SET_RETURN_VALUE(JS_INT(glfwGetWindowAttrib(window, attrib)));
@@ -843,8 +844,8 @@ JS_METHOD(WaitEvents) {
 /* Input handling */
 
 JS_METHOD(GetKey) {
-  uint64_t handle=info[0]->IntegerValue();
-  int key=info[1]->Uint32Value();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
+  int key=Nan::To<uint32_t>(info[1]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     SET_RETURN_VALUE(JS_INT(glfwGetKey(window, key)));
@@ -854,8 +855,8 @@ JS_METHOD(GetKey) {
 }
 
 JS_METHOD(GetMouseButton) {
-  uint64_t handle=info[0]->IntegerValue();
-  int button=info[1]->Uint32Value();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
+  int button=Nan::To<uint32_t>(info[1]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     SET_RETURN_VALUE(JS_INT(glfwGetMouseButton(window, button)));
@@ -865,7 +866,7 @@ JS_METHOD(GetMouseButton) {
 }
 
 JS_METHOD(GetCursorPos) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();;
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     double x,y;
@@ -880,9 +881,9 @@ JS_METHOD(GetCursorPos) {
 }
 
 JS_METHOD(SetCursorPos) {
-  uint64_t handle=info[0]->IntegerValue();
-  int x=info[1]->NumberValue();
-  int y=info[2]->NumberValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
+  int x=Nan::To<int32_t>(info[1]).FromJust();
+  int y=Nan::To<uint32_t>(info[2]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwSetCursorPos(window, x, y);
@@ -892,7 +893,7 @@ JS_METHOD(SetCursorPos) {
 
 /* @Module Context handling */
 JS_METHOD(MakeContextCurrent) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwMakeContextCurrent(window);
@@ -906,7 +907,7 @@ JS_METHOD(GetCurrentContext) {
 }
 
 JS_METHOD(SwapBuffers) {
-  uint64_t handle=info[0]->IntegerValue();
+  uint64_t handle=Nan::To<int64_t>(info[0]).FromJust();
   if(handle) {
     GLFWwindow* window = reinterpret_cast<GLFWwindow*>(handle);
     glfwSwapBuffers(window);
@@ -915,7 +916,7 @@ JS_METHOD(SwapBuffers) {
 }
 
 JS_METHOD(SwapInterval) {
-  int interval=info[0]->Int32Value();
+  int interval=Nan::To<int32_t>(info[0]).FromJust();
   glfwSwapInterval(interval);
   SET_RETURN_VALUE(Nan::Undefined());
 }
@@ -928,12 +929,12 @@ JS_METHOD(ExtensionSupported) {
 JS_METHOD(uploadAsTexture) {
   size_t argIndex = 0;
   GLuint tex =
-      static_cast<GLuint>(info[argIndex++]->IntegerValue());
+      static_cast<GLuint>(Nan::To<int64_t>(info[argIndex++]).FromJust());
   Nan::TypedArrayContents<uint8_t> buffer0(info[argIndex++].As<Uint8Array>());
   uint8_t* buffer = reinterpret_cast<uint8_t*>(*buffer0);
 
-  uint32_t width = info[argIndex++]->Uint32Value();
-  uint32_t height = info[argIndex++]->Uint32Value();
+  uint32_t width = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t height = Nan::To<uint32_t>(info[argIndex++]).FromJust();
   Nan::Utf8String str0(info[argIndex++]);
   std::string format_str = *str0;
 
@@ -945,11 +946,11 @@ JS_METHOD(uploadAsTexture) {
 JS_METHOD(showInRect) {
   size_t argIndex = 0;
   GLuint tex =
-      static_cast<GLuint>(info[argIndex++]->IntegerValue());
-  uint32_t x = info[argIndex++]->Uint32Value();
-  uint32_t y = info[argIndex++]->Uint32Value();
-  uint32_t w = info[argIndex++]->Uint32Value();
-  uint32_t h = info[argIndex++]->Uint32Value();
+      static_cast<GLuint>(Nan::To<int64_t>(info[argIndex++]).FromJust());
+  uint32_t x = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t y = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t w = Nan::To<uint32_t>(info[argIndex++]).FromJust();
+  uint32_t h = Nan::To<uint32_t>(info[argIndex++]).FromJust();
   show(tex, Rect(x, y, w, h));
   SET_RETURN_VALUE(Nan::Undefined());
 }
@@ -976,7 +977,7 @@ void AtExit() {
 #define JS_GLFW_SET_METHOD(name) Nan::SetMethod(target, #name , glfw::name);
 
 extern "C" {
-void init(Handle<Object> target) {
+void init(Local<Object> target) {
   atexit(glfw::AtExit);
 
   Nan::HandleScope scope;
