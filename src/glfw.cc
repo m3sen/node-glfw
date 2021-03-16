@@ -463,7 +463,7 @@ static void global_key_func(GLFWwindow *, int key,
 }
 
 JS_METHOD(setKeyCallback) {
-  GLFWwindow* win = reinterpret_cast<GLFWwindow*>(Nan::To<int32_t>(info[0]).FromJust());
+  GLFWwindow* win = reinterpret_cast<GLFWwindow*>(Nan::To<int64_t>(info[0]).FromJust());
   global_js_key_callback = new Nan::Callback(info[1].As<v8::Function>());
   glfwSetKeyCallback(win, global_key_func);
 }
@@ -471,7 +471,7 @@ JS_METHOD(setKeyCallback) {
 JS_METHOD(draw2x2Streams) {
   size_t argIndex = 0;
   GLFWwindow* win =
-    reinterpret_cast<GLFWwindow*>(Nan::To<int32_t>(info[argIndex++]).FromJust());
+    reinterpret_cast<GLFWwindow*>(Nan::To<int64_t>(info[argIndex++]).FromJust());
   int32_t winW = 0;
   int32_t winH = 0;
   glfwGetWindowSize(win, &winW, &winH);
