@@ -16,7 +16,8 @@ IF errorlevel 1 (
 	exit 2
 )
 
-msbuild GLFW.sln /p:Configuration=Release /p:Platform=%3 /m:4
+:: msbuild GLFW.sln /p:Configuration=Release /p:Platform=%3 /m:4
+msbuild GLFW.sln /m:4
 IF errorlevel 1 (
 	echo "GLFW Visual Stuio build (msbuild) failed"
 	exit 3
