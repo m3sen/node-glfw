@@ -310,8 +310,11 @@ void upload_texture(
     } else if (format == "raw8") {
       glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height,
           0, GL_LUMINANCE, GL_UNSIGNED_BYTE, data);
+    } else if (format == "y16") {
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height,
+          0, GL_LUMINANCE, GL_UNSIGNED_SHORT, data);
     } else {
-      printf("Error: 1234 not supported color format in glfw: %s\n", format.c_str());
+      printf("Error: not supported color format in glfw: %s\n", format.c_str());
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
