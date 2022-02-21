@@ -16,3 +16,7 @@ node_modules
 *generate.stamp*
 CMakeFiles
 CMakeCache.txt
+Release
+*.cmake
+package-lock.json
+deps
